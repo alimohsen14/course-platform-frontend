@@ -1,12 +1,41 @@
+/* eslint-disable */
 import { useState } from "react";
 import logo from "../assets/images/logo.jpeg";
+import { useNavigate } from "react-router-dom";
+import { login, googleLoginRedirect } from "../services/authService";
 
 export function LoginPage() {
   const [tab, setTab] = useState<"login" | "signup">("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: handle form submit
+
+    try {
+      setError("");
+
+      const res = await login({ email, password });
+
+      if (res.accessToken) {
+        localStorage.setItem("accessToken", res.accessToken);
+        localStorage.setItem("user", JSON.stringify(res.user));
+
+        navigate("/home");
+      } else {
+        setError(res.message || "Login failed");
+      }
+    } catch (err: any) {
+      const msg =
+        err?.response?.data?.message || "❌ Invalid email or password";
+      setError(msg);
+    }
+  };
+
+  const handleGoogle = () => {
+    googleLoginRedirect();
   };
 
   return (
@@ -14,7 +43,7 @@ export function LoginPage() {
       <div className="w-full max-w-md bg-white/80 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden">
         <div className="p-6">
           <div className="flex flex-col items-center -mt-12">
-            <div className="mx-auto w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-white bg-transparent shadow-md mt-8 mb-0 flex items-center justify-center">
+            <div className="mx-auto w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-white bg-transparent shadow-md mt-8">
               <img
                 src={logo}
                 alt="Logo"
@@ -34,8 +63,9 @@ export function LoginPage() {
                 >
                   Login
                 </button>
+
                 <button
-                  onClick={() => setTab("signup")}
+                  onClick={() => navigate("/signup")}
                   className={`px-3 pb-2 ${
                     tab === "signup"
                       ? "text-blue-600 border-b-2 border-blue-600"
@@ -48,24 +78,46 @@ export function LoginPage() {
 
               <div className="mt-6">
                 <form onSubmit={handleSubmit} className="space-y-4">
+                  {error && (
+                    <div className="w-full text-red-600 text-sm font-medium bg-red-50 border border-red-200 px-3 py-2 rounded-md">
+                      {error}
+                    </div>
+                  )}
+
                   <input
                     type="email"
                     placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-300"
                   />
+
                   <input
                     type="password"
                     placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-300"
                   />
+
+                  {/* 🔹 زر نسيان الباسورد */}
+                  <div className="flex justify-end -mt-2">
+                    <button
+                      type="button"
+                      onClick={() => navigate("/forgot-password")}
+                      className="text-sm text-blue-600 hover:underline"
+                    >
+                      Forgot Password?
+                    </button>
+                  </div>
 
                   <button
                     type="submit"
                     className="w-full mt-2 bg-blue-600 text-white py-3 rounded-lg font-medium shadow-sm hover:bg-blue-700 transition"
                   >
-                    {tab === "login" ? "Login" : "Create account"}
+                    Login
                   </button>
                 </form>
 
@@ -78,7 +130,7 @@ export function LoginPage() {
                 </div>
 
                 <button
-                  type="button"
+                  onClick={handleGoogle}
                   className="w-full flex items-center justify-center gap-3 border border-gray-200 rounded-lg px-4 py-3 bg-white hover:shadow-sm transition"
                 >
                   <svg
@@ -103,6 +155,7 @@ export function LoginPage() {
                       d="M272 109.7c39.4 0 75 13.6 103 40.3l77.3-77.3C405.5 24 347.1 0 272 0 168 0 79.4 57.7 34.7 142.9l85.3 70c21.5-64.2 81.4-111.9 152-111.9z"
                     />
                   </svg>
+
                   <span className="text-sm font-medium">
                     Continue with Google
                   </span>

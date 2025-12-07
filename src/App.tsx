@@ -1,9 +1,11 @@
-import { LoginPage } from "./pages/LoginPage";
+import { BrowserRouter } from "react-router-dom";
+import { AppRouter } from "./AppRouter";
+
 function App() {
   return (
-    <div>
-      <LoginPage />
-    </div>
+    <BrowserRouter>
+      <AppRouter />
+    </BrowserRouter>
   );
 }
 
