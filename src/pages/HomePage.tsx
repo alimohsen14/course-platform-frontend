@@ -1,6 +1,11 @@
-/* eslint-disable */
 import { useEffect, useState } from "react";
 import { getProfile } from "../services/authService";
+import Navbar from "../components/Navbar";
+import Hero from "../components/Hero";
+import CoursesSection from "../components/CoursesSection";
+import Footer from "../components/Footer";
+import DashboardLayout from "../components/layout/DashboardLayout";
+
 
 export function HomePage() {
   const [user, setUser] = useState<any>(null);
@@ -22,16 +27,32 @@ export function HomePage() {
   }, []);
 
   if (loading) {
+   
+
+      
     return (
-      <div className="text-center p-10 text-3xl font-semibold">
-        Loading profile...
+          <DashboardLayout>
+      <div className="min-h-screen bg-gray-50">
+        <div className="text-center p-10 text-3xl font-semibold">
+          Loading...
+        </div>
       </div>
+       </DashboardLayout>
     );
   }
 
   return (
-    <div className="text-center p-8 text-3xl">
-      Welcome back, {user?.name || "User"} 👋
+    <DashboardLayout>
+
+   
+    <div className="min-h-screen flex flex-col">
+      
+      <main className="flex-grow">
+        <Hero />
+        <CoursesSection />
+      </main>
+     
     </div>
+     </DashboardLayout>
   );
 }
