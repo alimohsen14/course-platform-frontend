@@ -44,11 +44,26 @@ export function GoogleCallbackPage() {
     if (accessToken) {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
-      navigate("/home", { replace: true });
+
+      fetch("http://localhost:3004/auth/profile", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((user) => {
+          localStorage.setItem("user", JSON.stringify(user));
+          navigate("/home", { replace: true }); // أو "/home" حسب ما بدك
+        })
+        .catch(() => {
+          navigate("/");
+        });
+
       return;
     }
 
-    navigate("/login");
+    navigate("/");
   }, [navigate]);
 
   return (

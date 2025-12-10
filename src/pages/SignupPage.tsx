@@ -50,6 +50,10 @@ export function SignupPage() {
           localStorage.setItem("accessToken", res.accessToken);
         }
 
+        if (res.user) {
+          localStorage.setItem("user", JSON.stringify(res.user));
+        }
+
         navigate("/home", { replace: true });
         return;
       }

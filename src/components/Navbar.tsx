@@ -1,30 +1,28 @@
-import { useNavigate } from 'react-router-dom';
-import { FiBell, FiUser } from 'react-icons/fi';
-import { IconType } from 'react-icons';
-
+import { useNavigate } from "react-router-dom";
+import { FiBell, FiUser } from "react-icons/fi";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('user');
-    navigate('/');
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
+    navigate("/");
   };
 
   const scrollToCourses = () => {
-    const coursesSection = document.getElementById('courses-section');
-    coursesSection?.scrollIntoView({ behavior: 'smooth' });
+    const coursesSection = document.getElementById("courses-section");
+    coursesSection?.scrollIntoView({ behavior: "smooth" });
   };
-const handleProfileClick = () => {
-  const user = localStorage.getItem("user");
+  const handleProfileClick = () => {
+    const user = localStorage.getItem("user");
 
-  if (!user) {
-    navigate("/login");
-  } else {
-    navigate("/profile");
-  }
-};
+    if (!user) {
+      navigate("/login");
+    } else {
+      navigate("/profile");
+    }
+  };
 
   return (
     <nav className="sticky top-0 z-50 bg-white shadow-md">
@@ -43,18 +41,24 @@ const handleProfileClick = () => {
           {/* Navigation Links */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              <a href="#" className="text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+              <button
+                onClick={() => navigate("/home")}
+                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+              >
                 Home
-              </a>
-              <button 
+              </button>
+              <button
                 onClick={scrollToCourses}
                 className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
               >
                 Courses
               </button>
-              <a href="#" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+              <button
+                onClick={scrollToCourses}
+                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+              >
                 About
-              </a>
+              </button>
             </div>
           </div>
 
@@ -63,9 +67,12 @@ const handleProfileClick = () => {
             <button className="p-2 rounded-full text-gray-600 hover:bg-gray-100">
               <FiBell className="h-5 w-5" />
             </button>
-          <button onClick={handleProfileClick} className="p-2 rounded-full text-gray-600 hover:bg-gray-100">
-  <FiUser className="h-5 w-5" />
-</button>
+            <button
+              onClick={handleProfileClick}
+              className="p-2 rounded-full text-gray-600 hover:bg-gray-100"
+            >
+              <FiUser className="h-5 w-5" />
+            </button>
 
             <button
               onClick={handleLogout}

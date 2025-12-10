@@ -58,3 +58,34 @@ export async function getProfile() {
 
   return res.json();
 }
+export async function updateProfile(data: { name?: string; phone?: string }) {
+  const token = localStorage.getItem("accessToken");
+
+  const res = await fetch(`${API_URL}/profile`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  return res.json();
+}
+export async function changePassword(data: {
+  currentPassword: string;
+  newPassword: string;
+}) {
+  const token = localStorage.getItem("accessToken");
+
+  const res = await fetch("http://localhost:3004/auth/change-password", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  return res.json();
+}
